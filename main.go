@@ -5,10 +5,17 @@ import (
 	"os"
 	"strings"
 
+	"graphql-go/compatibility-unit-tests/implementation"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-var choices = []string{"https://github.com/graphql-go/graphql"}
+var choices = []string{}
+
+func init() {
+  for i := range implementation.Implementations {
+    choices = append(choices, i)
+  }
+}
 
 type model struct {
 	cursor int

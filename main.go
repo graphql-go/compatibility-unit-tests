@@ -2,19 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
-	"graphql-go/compatibility-unit-tests/implementation"
 	tea "github.com/charmbracelet/bubbletea"
+	"graphql-go/compatibility-unit-tests/implementation"
+	"graphql-go/compatibility-unit-tests/puller"
 )
 
 var choices = []string{}
 
 func init() {
-  for i := range implementation.Implementations {
-    choices = append(choices, i)
-  }
+	for i := range implementation.Implementations {
+		choices = append(choices, i)
+	}
 }
 
 type model struct {
@@ -73,12 +75,19 @@ func (m model) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(model{})
+	teaProgram := tea.NewProgram(model{})
 
-	m, err := p.Run()
+	m, err := teaProgram.Run()
 	if err != nil {
 		os.Exit(1)
 	}
+
+	p := puller.Puller{}
+	result, err := p.Pull(&puller.PullerParams{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(result)
 
 	if m, ok := m.(model); ok && m.choice != "" {
 		fmt.Printf("\n---\nYou chose %s!\n", m.choice)

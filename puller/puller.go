@@ -1,10 +1,9 @@
 package puller
 
 import (
-	"log"
 	"os"
 
-	"github.com/google/go-github/v69/github"
+	"github.com/go-git/go-git/v5"
 )
 
 type Puller struct {
@@ -14,17 +13,16 @@ type PullerResult struct {
 }
 
 type PullerParams struct {
+	RepoURL string
 }
 
 func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
-	token := os.Getenv("GITHUB_AUTH_TOKEN")
-	if token == "" {
-		return nil, nil
+	if _, err := git.PlainClone("./repos", false, &git.CloneOptions{
+		URL:      params.RepoURL,
+		Progress: os.Stdout,
+	}); err != nil {
+		return nil, err
 	}
-
-	client := github.NewClient(nil).WithAuthToken(token)
-
-	log.Printf("client: %+v", client)
 
 	return &PullerResult{}, nil
 }

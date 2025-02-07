@@ -20,7 +20,7 @@ func main() {
 	cli := cmd.CLI{}
 
 	cliResult, err := cli.Run(&cmd.RunParams{
-		Choices: implementation.Implementations,
+		Choices: choices,
 	})
 	if err != nil {
 		log.Fatal(err)

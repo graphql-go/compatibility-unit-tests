@@ -82,14 +82,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	p := puller.Puller{}
-	result, err := p.Pull(&puller.PullerParams{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(result)
+	choice := ""
 
 	if m, ok := m.(model); ok && m.choice != "" {
 		fmt.Printf("\n---\nYou chose %s!\n", m.choice)
+		choice = m.choice
 	}
+
+	p := puller.Puller{}
+	result, err := p.Pull(&puller.PullerParams{
+		RepoURL: choice,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("result: %+v", result)
 }

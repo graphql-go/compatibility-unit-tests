@@ -31,12 +31,14 @@ func main() {
 	result, err := app.Run(mainApp.AppParams{
 		Implementation: types.Implementation{
 			Repo: types.Repository{
-				URL: cliResult.Choice,
+				Name: "implementation",
+				URL:  cliResult.Choice,
 			},
 		},
 		RefImplementation: types.Implementation{
 			Repo: types.Repository{
-				URL: implementation.JSRefImplementation,
+				Name: "reference-implementation",
+				URL:  implementation.JSRefImplementation,
 			},
 		},
 	})

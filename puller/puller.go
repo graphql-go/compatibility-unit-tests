@@ -4,6 +4,8 @@ import (
 	"os"
 
 	"github.com/go-git/go-git/v5"
+
+	"graphql-go/compatibility-unit-tests/types"
 )
 
 type Puller struct {
@@ -13,15 +15,23 @@ type PullerResult struct {
 }
 
 type PullerParams struct {
-	RepoURL string
+	Implementation    types.Implementation
+	RefImplementation types.Implementation
 }
 
 func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
-	if _, err := git.PlainClone("./repos", false, &git.CloneOptions{
-		URL:      params.RepoURL,
-		Progress: os.Stdout,
-	}); err != nil {
-		return nil, err
+	repos := []types.Implementation{
+		params.Implementation,
+		params.RefImplementation,
+	}
+
+	for _, r := range repos {
+		if _, err := git.PlainClone("./repos", false, &git.CloneOptions{
+			URL:      r.Repo.URL,
+			Progress: os.Stdout,
+		}); err != nil {
+			return nil, err
+		}
 	}
 
 	return &PullerResult{}, nil

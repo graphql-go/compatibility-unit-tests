@@ -6,6 +6,7 @@ import (
 	mainApp "graphql-go/compatibility-unit-tests/app"
 	"graphql-go/compatibility-unit-tests/cmd"
 	"graphql-go/compatibility-unit-tests/implementation"
+	"graphql-go/compatibility-unit-tests/types"
 )
 
 var choices = []string{}
@@ -27,7 +28,18 @@ func main() {
 	}
 
 	app := mainApp.App{}
-	result, err := app.Run(cliResult.Choice)
+	result, err := app.Run(mainApp.AppParams{
+		Implementation: types.Implementation{
+			Repo: types.Repository{
+				URL: cliResult.Choice,
+			},
+		},
+		RefImplementation: types.Implementation{
+			Repo: types.Repository{
+				URL: implementation.JSRefImplementation,
+			},
+		},
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

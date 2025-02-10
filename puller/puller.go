@@ -26,7 +26,13 @@ func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
 	}
 
 	for _, r := range repos {
-		if _, err := git.PlainClone("./repos", false, &git.CloneOptions{
+		name := "./repos/" + r.Repo.Name
+		if _, err := os.Stat(name); os.IsNotExist(err) {
+			if err := os.Mkdir(name, os.ModePerm); err != nil {
+				return nil, err
+			}
+		}
+		if _, err := git.PlainClone(name, false, &git.CloneOptions{
 			URL:      r.Repo.URL,
 			Progress: os.Stdout,
 		}); err != nil {

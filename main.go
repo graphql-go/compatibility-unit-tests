@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
+	mainApp "graphql-go/compatibility-unit-tests/app"
 	"graphql-go/compatibility-unit-tests/cmd"
 	"graphql-go/compatibility-unit-tests/implementation"
-	"graphql-go/compatibility-unit-tests/puller"
 )
 
 var choices = []string{}
@@ -26,10 +26,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	p := puller.Puller{}
-	result, err := p.Pull(&puller.PullerParams{
-		RepoURL: cliResult.Choice,
-	})
+	app := mainApp.App{}
+	result, err := app.Run(cliResult.Choice)
 	if err != nil {
 		log.Fatal(err)
 	}

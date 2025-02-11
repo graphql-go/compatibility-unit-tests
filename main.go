@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	mainApp "graphql-go/compatibility-unit-tests/app"
@@ -11,8 +12,8 @@ import (
 var choices = []string{}
 
 func init() {
-	for i := range implementation.Implementations {
-		choices = append(choices, i)
+	for _, i := range implementation.Implementations {
+		choices = append(choices, i.Repo.URL)
 	}
 }
 
@@ -26,8 +27,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	currentImplementation, ok := implementation.ImplementationsMap[cliResult.Choice]
+	if !ok {
+		log.Fatal(fmt.Errorf("expected to find the following implementation: %v", cliResult.Choice))
+	}
+
 	app := mainApp.App{}
-	result, err := app.Run(cliResult.Choice)
+	result, err := app.Run(mainApp.AppParams{
+		Implementation:    currentImplementation,
+		RefImplementation: implementation.GraphqlJSImplementation,
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

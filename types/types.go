@@ -1,8 +1,9 @@
 package types
 
 type Repository struct {
-	Name string
-	URL  string
+	Name          string
+	URL           string
+	ReferenceName string
 }
 
 type Implementation struct {

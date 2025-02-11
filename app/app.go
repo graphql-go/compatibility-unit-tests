@@ -1,6 +1,7 @@
 package app
 
 import (
+	"graphql-go/compatibility-unit-tests/extractor"
 	"graphql-go/compatibility-unit-tests/puller"
 	"graphql-go/compatibility-unit-tests/types"
 )
@@ -23,6 +24,11 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 		Implementation:    params.Implementation,
 		RefImplementation: params.RefImplementation,
 	}); err != nil {
+		return nil, err
+	}
+
+	ex := extractor.Extractor{}
+	if _, err := ex.Extract(&extractor.ExtractorParams{}); err != nil {
 		return nil, err
 	}
 

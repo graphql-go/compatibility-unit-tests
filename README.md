@@ -26,4 +26,20 @@ Total 5158 (delta 52), reused 52 (delta 34), pack-reused 5062 (from 3)
 The library validates compatibility by checking the end results of the unit tests from the choosen graphql implementation
 against the `graphql-js` implementation, the following checks are done:
 
-1- Testing the default reference implementation star-wars schema.
+The strategy works in the following steps:
+
+1- Pulls the tests names of the JavaScript implementation, Eg:
+```
+describe('Execute: Handles execution with a complex schema', () => {
+  it('executes using a schema', () => {
+    // ...
+  }
+}
+```
+
+The name is converted to Go test name in the following syntax:
+```
+ExecuteHandlesExecutionWithAComplexSchema_ExecutesUsingASchema
+```
+
+

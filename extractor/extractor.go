@@ -3,6 +3,7 @@ package extractor
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/tdewolff/parse/v2"
 	"github.com/tdewolff/parse/v2/js"
@@ -25,7 +26,7 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 	}
 
 	for _, e := range entries {
-		fmt.Println(e.Name())
+		fmt.Println(strings.HasPrefix(e.Name(), "-test.ts"))
 	}
 
 	return nil, nil

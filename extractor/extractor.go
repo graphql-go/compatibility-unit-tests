@@ -2,7 +2,9 @@ package extractor
 
 import (
 	"fmt"
-	"os"
+	"io/fs"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 
 	"github.com/tdewolff/parse/v2"
@@ -20,14 +22,36 @@ type ExtractorParams struct {
 }
 
 func (e *Extractor) readFiles() (*ExtractorResult, error) {
-	entries, err := os.ReadDir("./repos/graphql-graphql-js")
-	if err != nil {
-		return nil, err
+	rootDir := "./repos/graphql-graphql-js"
+
+	testsFiles := []string{}
+
+	walk := func(s string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !d.IsDir() {
+			return nil
+		}
+
+		files, err := ioutil.ReadDir(s)
+		if err != nil {
+			return err
+		}
+
+		for _, file := range files {
+			if !file.IsDir() {
+				if strings.HasSuffix(file.Name(), "-test.ts") {
+					testsFiles = append(testsFiles, file.Name())
+				}
+			}
+		}
+
+		return nil
 	}
 
-	for _, e := range entries {
-		fmt.Println(strings.HasPrefix(e.Name(), "-test.ts"))
-	}
+	filepath.WalkDir(rootDir, walk)
 
 	return nil, nil
 }

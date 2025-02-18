@@ -3,9 +3,7 @@ package extractor
 import (
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
-	"strings"
 
 	"github.com/tdewolff/parse/v2"
 	"github.com/tdewolff/parse/v2/js"
@@ -15,6 +13,7 @@ type Extractor struct {
 }
 
 type ExtractorResult struct {
+	TestFiles []string
 }
 
 type ExtractorParams struct {
@@ -31,34 +30,26 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 			return err
 		}
 
-		if !d.IsDir() {
-			return nil
-		}
-
-		files, err := ioutil.ReadDir(s)
-		if err != nil {
-			return err
-		}
-
-		for _, file := range files {
-			if !file.IsDir() {
-				if strings.HasSuffix(file.Name(), "-test.ts") {
-					testsFiles = append(testsFiles, file.Name())
-				}
-			}
-		}
+		testsFiles = append(testsFiles, s)
 
 		return nil
 	}
 
 	filepath.WalkDir(rootDir, walk)
 
-	return nil, nil
+	return &ExtractorResult{
+		TestFiles: testsFiles,
+	}, nil
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-	if _, err := e.readFiles(); err != nil {
+	extractorResult, err := e.readFiles()
+	if err != nil {
 		return nil, err
+	}
+
+	for _, testFile := range extractorResult.TestFiles {
+		fmt.Printf("testFile: %+v\n", testFile)
 	}
 
 	ast, err := js.Parse(parse.NewInputString(params.Source), js.Options{})

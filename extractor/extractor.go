@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
+	"log"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -15,6 +17,7 @@ type Extractor struct {
 }
 
 type ExtractorResult struct {
+	TestFiles []string
 }
 
 type ExtractorParams struct {
@@ -24,7 +27,7 @@ type ExtractorParams struct {
 func (e *Extractor) readFiles() (*ExtractorResult, error) {
 	rootDir := "./repos/graphql-graphql-js"
 
-	testsFiles := []string{}
+	testFiles := []string{}
 
 	walk := func(s string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -43,7 +46,8 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 		for _, file := range files {
 			if !file.IsDir() {
 				if strings.HasSuffix(file.Name(), "-test.ts") {
-					testsFiles = append(testsFiles, file.Name())
+					path := path.Join(s, file.Name())
+					testFiles = append(testFiles, path)
 				}
 			}
 		}
@@ -53,12 +57,21 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 
 	filepath.WalkDir(rootDir, walk)
 
-	return nil, nil
+	return &ExtractorResult{
+		TestFiles: testFiles,
+	}, nil
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-	if _, err := e.readFiles(); err != nil {
+	extractorResult, err := e.readFiles()
+	if err != nil {
 		return nil, err
+	}
+
+	for _, testFile := range extractorResult.TestFiles {
+		if testFile == "repos/graphql-graphql-js/src/execution/__tests__/schema-test.ts" {
+			log.Println(testFile)
+		}
 	}
 
 	ast, err := js.Parse(parse.NewInputString(params.Source), js.Options{})

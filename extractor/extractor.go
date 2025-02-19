@@ -1,6 +1,7 @@
 package extractor
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -12,6 +13,8 @@ import (
 
 	"github.com/tdewolff/parse/v2"
 	"github.com/tdewolff/parse/v2/js"
+
+	"github.com/evanw/esbuild/pkg/api"
 )
 
 type Extractor struct {
@@ -110,14 +113,28 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		}
 
 		if testFile == "repos/graphql-graphql-js/src/execution/__tests__/schema-test.ts" {
-			log.Println(string(fileContent))
+			transformResult := api.Transform(string(fileContent), api.TransformOptions{
+				Loader:            api.LoaderTSX,
+				MinifyWhitespace:  false,
+				MinifyIdentifiers: false,
+				MinifySyntax:      false,
+			})
 
-			ast, err := e.fileContentToFileAST(string(fileContent))
+			if len(transformResult.Errors) > 0 {
+				errs := errors.New("")
+				for _, err := range transformResult.Errors {
+					fmt.Errorf("%v: %w", err, errs)
+					return nil, errs
+				}
+			}
+
+			ast, err := e.fileContentToFileAST(string(transformResult.Code))
 			if err != nil {
 				return nil, err
 			}
 			log.Println(ast)
 		}
 	}
+
 	return &ExtractorResult{}, nil
 }

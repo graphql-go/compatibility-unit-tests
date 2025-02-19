@@ -132,9 +132,24 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 			if err != nil {
 				return nil, err
 			}
-			log.Println(ast)
+
+			js.Walk(&walker{}, ast)
 		}
 	}
 
 	return &ExtractorResult{}, nil
+}
+
+type walker struct{}
+
+func (w *walker) Enter(n js.INode) js.IVisitor {
+	switch n := n.(type) {
+	case *js.Var:
+		log.Println(string(n.Data))
+	}
+
+	return w
+}
+
+func (w *walker) Exit(n js.INode) {
 }

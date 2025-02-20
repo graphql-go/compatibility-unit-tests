@@ -42,4 +42,8 @@ The name is converted to Go test name in the following syntax:
 ExecuteHandlesExecutionWithAComplexSchema_ExecutesUsingASchema
 ```
 
+### Details
+
+1- Extractor: Pulls the JavaScript names from the unit tests.
+
 

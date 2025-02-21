@@ -3,6 +3,9 @@ package extractor
 import (
 	"fmt"
 	"io/fs"
+	"io/ioutil"
+	"log"
+	"path"
 	"path/filepath"
 
 	"github.com/tdewolff/parse/v2"
@@ -23,7 +26,7 @@ type ExtractorParams struct {
 func (e *Extractor) readFiles() (*ExtractorResult, error) {
 	rootDir := "./repos/graphql-graphql-js"
 
-	testsFiles := []string{}
+	testFiles := []string{}
 
 	walk := func(s string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -31,6 +34,23 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 		}
 
 		testsFiles = append(testsFiles, s)
+		if !d.IsDir() {
+			return nil
+		}
+
+		files, err := ioutil.ReadDir(s)
+		if err != nil {
+			return err
+		}
+
+		for _, file := range files {
+			if !file.IsDir() {
+				if strings.HasSuffix(file.Name(), "-test.ts") {
+					path := path.Join(s, file.Name())
+					testFiles = append(testFiles, path)
+				}
+			}
+		}
 
 		return nil
 	}
@@ -38,7 +58,7 @@ func (e *Extractor) readFiles() (*ExtractorResult, error) {
 	filepath.WalkDir(rootDir, walk)
 
 	return &ExtractorResult{
-		TestFiles: testsFiles,
+		TestFiles: testFiles,
 	}, nil
 }
 
@@ -50,6 +70,9 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 
 	for _, testFile := range extractorResult.TestFiles {
 		fmt.Printf("testFile: %+v\n", testFile)
+		if testFile == "repos/graphql-graphql-js/src/execution/__tests__/schema-test.ts" {
+			log.Println(testFile)
+		}
 	}
 
 	ast, err := js.Parse(parse.NewInputString(params.Source), js.Options{})

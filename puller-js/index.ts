@@ -1,29 +1,29 @@
 import { readFileSync } from "fs";
 import * as ts from "typescript";
 
-function walk(sourceFile: ts.SourceFile) {
-  innerWalk(sourceFile);
+const fileName = "schema-test.ts";
+const sourceFile = ts.createSourceFile(fileName, readFileSync(fileName).toString(), ts.ScriptTarget.ES2015);
 
-  function innerWalk(node: ts.Node) {
-    switch (node.kind) {
-        case ts.SyntaxKind.FunctionDeclaration:
-          default:
-            const n = node as any;
-            if(n?.name?.escapedText === "describe") {
-              console.log(n?.name?.escapedText);
-            }
+
+const tests = [] as any;
+
+function walk(node: ts.SourceFile | ts.Node) {
+  const n = node as any;
+
+  if(n?.kind === ts.SyntaxKind.CallExpression) {
+    if(n?.arguments && n?.arguments.length) {
+      if(n?.arguments[0].text) {
+        if(n?.expression?.escapedText === "describe" || n?.expression?.escapedText === "it") {
+          const testName = n?.arguments[0].text;
+          tests.push(testName);
+        }
+      }
     }
-
-    ts.forEachChild(node, innerWalk);
   }
+
+  node.forEachChild((subNode: ts.Node) => {
+   walk(subNode);
+  });
 }
 
-const fileName = "schema-test.ts";
-
-const sourceFile = ts.createSourceFile(
-  fileName,
-  readFileSync(fileName).toString(),
-  ts.ScriptTarget.ES2015,
-);
-
-walk(sourceFile)
+walk(sourceFile);

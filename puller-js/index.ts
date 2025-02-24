@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import * as ts from "typescript";
+import { camelCase, upperFirst } from 'lodash';
 
 const fileName = "schema-test.ts";
 const sourceFile = ts.createSourceFile(fileName, readFileSync(fileName).toString(), ts.ScriptTarget.ES2015);
@@ -27,3 +28,8 @@ function walk(node: ts.SourceFile | ts.Node) {
 }
 
 walk(sourceFile);
+
+for(let i = 0; i <  tests.length; i++) {
+  const testName = upperFirst(camelCase(tests[i]));
+  console.log(testName);
+}

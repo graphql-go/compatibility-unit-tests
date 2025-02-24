@@ -44,6 +44,9 @@ ExecuteHandlesExecutionWithAComplexSchema_ExecutesUsingASchema
 
 ### Details
 
-1- Extractor: Pulls the JavaScript names from the unit tests.
+1- `extractor-js`: Pulls the JavaScript tests names from the unit tests files.
+2- `extractor-js`: Saves the unit tests names into a file named: `unit-tests.txt`.
+3- `compatibility-unit-tests/extractor`: Pulls the unit tests names from the GraphQL implementation.
+4- `compatibility-unit-tests/validator`: Compares the unit tests names from the GraphQL implementation against the `unit-tests.txt` file.
 
 

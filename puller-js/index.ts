@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import * as ts from "typescript";
 import { camelCase, upperFirst } from 'lodash';
+import * as fs from "fs";
 
 const fileName = "schema-test.ts";
 const sourceFile = ts.createSourceFile(fileName, readFileSync(fileName).toString(), ts.ScriptTarget.ES2015);
@@ -27,9 +28,28 @@ function walk(node: ts.SourceFile | ts.Node) {
   });
 }
 
-walk(sourceFile);
+// walk(sourceFile);
 
 for(let i = 0; i <  tests.length; i++) {
   const testName = upperFirst(camelCase(tests[i]));
   console.log(testName);
 }
+
+const files = [] as any;
+const dirName = '../repos/graphql-graphql-js';
+const walkDir = (dirName: any) => {
+  const files2 = fs.readdirSync(dirName, { withFileTypes: true })
+  	.filter((item) => {
+      if(item.isDirectory()) {
+        // walkDir(item);
+      }
+      return !item.isDirectory();
+    })
+    .map((item) => {
+      files.push(item.name);
+        return item.name;
+    });
+};
+
+walkDir(dirName);
+confs.readdirSyncsole.log(files);

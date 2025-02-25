@@ -42,13 +42,14 @@ for (let i = 0; i < tests.length; i++) {
 }
 
 const files = [] as any;
-const dirName = "../repos/graphql-graphql-js";
+const rootDir = "../repos/graphql-graphql-js";
 const walkDir = (dirName: any) => {
   const files2 = fs
     .readdirSync(dirName, { withFileTypes: true })
     .filter((item) => {
       if (item.isDirectory()) {
-        // walkDir(item);
+        // console.log(`${rootDir}/${item.name}`);
+        // walkDir(`${rootDir}/${item.name}`);
       }
       return !item.isDirectory();
     })
@@ -58,5 +59,5 @@ const walkDir = (dirName: any) => {
     });
 };
 
-walkDir(dirName);
-confs.readdirSyncsole.log(files);
+walkDir(rootDir);
+console.log(files);

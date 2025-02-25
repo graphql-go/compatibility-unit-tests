@@ -48,10 +48,14 @@ const walkDir = (dirName: any) => {
 
   for (let i = 0; i < dirNames.length; i++) {
     const item = dirNames[i];
-    if (item.isDirectory()) {
-      console.log(item.isDirectory());
+    const filePath = `${item.path}/${item.name}`;
+    if (
+      item.isDirectory() &&
+      fs.existsSync(filePath) &&
+      !item.name.startsWith(".")
+    ) {
+      walkDir(filePath);
     } else {
-      const filePath = `${rootDir}/${item.name}`;
       files.push(filePath);
     }
   }

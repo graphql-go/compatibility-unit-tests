@@ -48,8 +48,10 @@ const walkDir = (dirName: any) => {
     .readdirSync(dirName, { withFileTypes: true })
     .filter((item) => {
       if (item.isDirectory()) {
-        // console.log(`${rootDir}/${item.name}`);
-        // walkDir(`${rootDir}/${item.name}`);
+        const subDirName = `${rootDir}/${item.name}`;
+        if(fs.existsSync(subDirName)) {
+          walkDir(subDirName);
+        }
       }
       return !item.isDirectory();
     })

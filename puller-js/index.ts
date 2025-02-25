@@ -44,21 +44,17 @@ for (let i = 0; i < tests.length; i++) {
 const files = [] as any;
 const rootDir = "../repos/graphql-graphql-js";
 const walkDir = (dirName: any) => {
-  const files2 = fs
-    .readdirSync(dirName, { withFileTypes: true })
-    .filter((item) => {
-      if (item.isDirectory()) {
-        const subDirName = `${rootDir}/${item.name}`;
-        if(fs.existsSync(subDirName)) {
-          walkDir(subDirName);
-        }
-      }
-      return !item.isDirectory();
-    })
-    .map((item) => {
-      files.push(item.name);
-      return item.name;
-    });
+  const dirNames = fs.readdirSync(dirName, { withFileTypes: true });
+
+  for (let i = 0; i < dirNames.length; i++) {
+    const item = dirNames[i];
+    if (item.isDirectory()) {
+      console.log(item.isDirectory());
+    } else {
+      const filePath = `${rootDir}/${item.name}`;
+      files.push(filePath);
+    }
+  }
 };
 
 walkDir(rootDir);

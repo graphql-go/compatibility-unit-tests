@@ -69,6 +69,15 @@ class TestFiles {
       }
     };
 
+    walkDir(rootDir);
+
     return files;
   }
 }
+
+const testNames = new TestNames();
+const testFiles = new TestFiles();
+
+const testFilesResult = testFiles.extractor();
+
+console.log(testFilesResult);

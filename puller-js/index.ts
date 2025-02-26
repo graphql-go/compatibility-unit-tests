@@ -2,20 +2,14 @@ import { readFileSync } from "fs";
 import * as ts from "typescript";
 import { TestFile } from "./src/TestFile";
 import { TestName } from "./src/TestName";
+import { TestFileSaver } from "./src/TestFileSaver";
 import * as fs from "fs";
 
-const fileName = "schema-test.ts";
+const testName = new TestName();
+const testFile = new TestFile();
+const testFileSaver = new TestFileSaver();
+const allTestsFileName = "unit-tests.txt";
 
-const testNames = new TestName();
-const testFiles = new TestFile();
-
-const testFilesResult = testFiles.extractor();
-const testNamesResult = testNames.extractor(testFilesResult);
-
-let result = "";
-for (let i = 0; i < testNamesResult.length; i++) {
-  const testName = testNamesResult[i];
-  result += `${testName}\n`;
-}
-
-fs.writeFileSync("unit-tests.txt", result);
+const testFileResult = testFile.extractor();
+const testNameResult = testName.extractor(testFileResult);
+testFileSaver.save(allTestsFileName);

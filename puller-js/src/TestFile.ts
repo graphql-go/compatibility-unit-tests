@@ -3,9 +3,8 @@ import * as fs from "fs";
 export class TestFile {
   constructor() {}
 
-  extractor() {
+  extractor(rootDirName: string) {
     const files = [] as any;
-    const rootDir = "../repos/graphql-graphql-js";
     const walkDir = (dirName: any) => {
       const dirNames = fs.readdirSync(dirName, { withFileTypes: true });
 
@@ -30,7 +29,7 @@ export class TestFile {
       }
     };
 
-    walkDir(rootDir);
+    walkDir(rootDirName);
 
     return files;
   }

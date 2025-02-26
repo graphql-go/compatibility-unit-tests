@@ -9,7 +9,8 @@ const testName = new TestName();
 const testFile = new TestFile();
 const testFileSaver = new TestFileSaver();
 const allTestsFileName = "unit-tests.txt";
+const graphqlJSRootDir = "../repos/graphql-graphql-js";
 
-const testFileResult = testFile.extractor();
+const testFileResult = testFile.extractor(graphqlJSRootDir);
 const testNameResult = testName.extractor(testFileResult);
-testFileSaver.save(allTestsFileName);
+testFileSaver.save(testNameResult, allTestsFileName);

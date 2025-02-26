@@ -1,3 +1,5 @@
+import * as fs from "fs";
+
 export class TestFileSaver {
   save(testNamesResult: any[], fileName: string) {
     let result = "";

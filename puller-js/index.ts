@@ -10,16 +10,11 @@ const sourceFile = ts.createSourceFile(
   ts.ScriptTarget.ES2015,
 );
 
-const tests = [] as any;
-
-// walk(sourceFile);
-// walkDir(rootDir);
-// console.log(files);
-
 class TestNames {
   constructor() {}
 
   walk(node: ts.SourceFile | ts.Node) {
+    const tests = [] as any;
     const n = node as any;
 
     if (n?.kind === ts.SyntaxKind.CallExpression) {
@@ -39,6 +34,14 @@ class TestNames {
     node.forEachChild((subNode: ts.Node) => {
       this.walk(subNode);
     });
+
+    const result = [];
+    for (let i = 0; i < tests.length; i++) {
+      const testName = upperFirst(camelCase(tests[i]));
+      result.push(testName);
+    }
+
+    return result;
   }
 }
 
@@ -46,11 +49,6 @@ class TestFiles {
   constructor() {}
 
   extractor() {
-    for (let i = 0; i < tests.length; i++) {
-      const testName = upperFirst(camelCase(tests[i]));
-      console.log(testName);
-    }
-
     const files = [] as any;
     const rootDir = "../repos/graphql-graphql-js";
     const walkDir = (dirName: any) => {
@@ -70,5 +68,7 @@ class TestFiles {
         }
       }
     };
+
+    return files;
   }
 }

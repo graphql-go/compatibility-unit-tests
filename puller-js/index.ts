@@ -49,11 +49,10 @@ class TestNames {
   extractor(files: string[]) {
     const result = [];
 
-    for (let i = 0; i < 100; i++) {
-      const fileName0 = files[i];
-      const fileName = "schema-test.ts";
+    for (let i = 0; i < files.length; i++) {
+      const fileName = files[i];
 
-      const check = fileName0.includes("__tests__");
+      const check = fileName.includes("__tests__");
       if (!check) {
         continue;
       }

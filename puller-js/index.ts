@@ -12,54 +12,63 @@ const sourceFile = ts.createSourceFile(
 
 const tests = [] as any;
 
-function walk(node: ts.SourceFile | ts.Node) {
-  const n = node as any;
+// walk(sourceFile);
+// walkDir(rootDir);
+// console.log(files);
 
-  if (n?.kind === ts.SyntaxKind.CallExpression) {
-    if (n?.arguments && n?.arguments.length) {
-      if (n?.arguments[0].text) {
-        if (
-          n?.expression?.escapedText === "describe" ||
-          n?.expression?.escapedText === "it"
-        ) {
-          const testName = n?.arguments[0].text;
-          tests.push(testName);
+class TestNames {
+  constructor() {}
+
+  walk(node: ts.SourceFile | ts.Node) {
+    const n = node as any;
+
+    if (n?.kind === ts.SyntaxKind.CallExpression) {
+      if (n?.arguments && n?.arguments.length) {
+        if (n?.arguments[0].text) {
+          if (
+            n?.expression?.escapedText === "describe" ||
+            n?.expression?.escapedText === "it"
+          ) {
+            const testName = n?.arguments[0].text;
+            tests.push(testName);
+          }
         }
       }
     }
+
+    node.forEachChild((subNode: ts.Node) => {
+      this.walk(subNode);
+    });
   }
-
-  node.forEachChild((subNode: ts.Node) => {
-    walk(subNode);
-  });
 }
 
-// walk(sourceFile);
+class TestFiles {
+  constructor() {}
 
-for (let i = 0; i < tests.length; i++) {
-  const testName = upperFirst(camelCase(tests[i]));
-  console.log(testName);
-}
-
-const files = [] as any;
-const rootDir = "../repos/graphql-graphql-js";
-const walkDir = (dirName: any) => {
-  const dirNames = fs.readdirSync(dirName, { withFileTypes: true });
-
-  for (let i = 0; i < dirNames.length; i++) {
-    const item = dirNames[i];
-    const filePath = `${item.path}/${item.name}`;
-    if (
-      item.isDirectory() &&
-      fs.existsSync(filePath) &&
-      !item.name.startsWith(".")
-    ) {
-      walkDir(filePath);
-    } else {
-      files.push(filePath);
+  extractor() {
+    for (let i = 0; i < tests.length; i++) {
+      const testName = upperFirst(camelCase(tests[i]));
+      console.log(testName);
     }
-  }
-};
 
-walkDir(rootDir);
-console.log(files);
+    const files = [] as any;
+    const rootDir = "../repos/graphql-graphql-js";
+    const walkDir = (dirName: any) => {
+      const dirNames = fs.readdirSync(dirName, { withFileTypes: true });
+
+      for (let i = 0; i < dirNames.length; i++) {
+        const item = dirNames[i];
+        const filePath = `${item.path}/${item.name}`;
+        if (
+          item.isDirectory() &&
+          fs.existsSync(filePath) &&
+          !item.name.startsWith(".")
+        ) {
+          walkDir(filePath);
+        } else {
+          files.push(filePath);
+        }
+      }
+    };
+  }
+}

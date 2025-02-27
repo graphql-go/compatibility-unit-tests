@@ -28,9 +28,7 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 	}
 
 	ex := extractor.Extractor{}
-	if _, err := ex.Extract(&extractor.ExtractorParams{
-		Source: "",
-	}); err != nil {
+	if _, err := ex.Extract(&extractor.ExtractorParams{}); err != nil {
 		return nil, err
 	}
 

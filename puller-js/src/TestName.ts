@@ -32,6 +32,30 @@ export class TestName {
     return result;
   }
 
+  private isTestNode(node: ts.Node) {
+    const n = node as any;
+
+    if (n?.kind !== ts.SyntaxKind.CallExpression) {
+      return false;
+    }
+
+    if (!n?.arguments && !n?.arguments.length) {
+      return false;
+    }
+
+    if (n?.arguments[0] && !n?.arguments[0].text) {
+      return false;
+    }
+    if (
+      n?.expression?.escapedText !== "describe" &&
+      n?.expression?.escapedText !== "it"
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   walk(node: ts.SourceFile | ts.Node) {
     const n = node as any;
 
@@ -50,6 +74,7 @@ export class TestName {
     }
 
     node.forEachChild((subNode: ts.Node) => {
+      this.isTestNode(subNode);
       this.walk(subNode);
     });
 

@@ -53,3 +53,11 @@ ExecuteHandlesExecutionWithAComplexSchema_ExecutesUsingASchema
 4- `compatibility-unit-tests/validator`: Compares the tests names from the **JavaScript GraphQL reference implementation** using **unit-tests.txt** against the **GraphQL implementation, eg. Golang**.
 
 
+### Further Work
+
+There are multiple **GraphQL implementations** in different languages such in Golang: 
+- https://github.com/99designs/gqlgen
+- https://github.com/graph-gophers/graphql-go
+
+Current work covers compatibility validation in terms of checking tests names mapping, but this could be extended into including the **body and result** of each test and increasing the comparison so could be used for checking the compatibility with other implementations in deeper checks.
+

@@ -57,24 +57,13 @@ export class TestName {
   }
 
   walk(node: ts.SourceFile | ts.Node) {
-    const n = node as any;
-
-    if (n?.kind === ts.SyntaxKind.CallExpression) {
-      if (n?.arguments && n?.arguments.length) {
-        if (n?.arguments[0].text) {
-          if (
-            n?.expression?.escapedText === "describe" ||
-            n?.expression?.escapedText === "it"
-          ) {
-            const testName = n?.arguments[0].text;
-            tests.push(testName);
-          }
-        }
-      }
-    }
-
     node.forEachChild((subNode: ts.Node) => {
-      this.isTestNode(subNode);
+      const n = subNode as any;
+      const isTestNodeCheck = this.isTestNode(subNode);
+      if (this.isTestNode(subNode)) {
+        const testName = n?.arguments[0].text;
+        tests.push(testName);
+      }
       this.walk(subNode);
     });
 

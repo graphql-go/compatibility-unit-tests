@@ -32,24 +32,38 @@ export class TestName {
     return result;
   }
 
-  walk(node: ts.SourceFile | ts.Node) {
+  private isTestNode(node: ts.Node) {
     const n = node as any;
 
-    if (n?.kind === ts.SyntaxKind.CallExpression) {
-      if (n?.arguments && n?.arguments.length) {
-        if (n?.arguments[0].text) {
-          if (
-            n?.expression?.escapedText === "describe" ||
-            n?.expression?.escapedText === "it"
-          ) {
-            const testName = n?.arguments[0].text;
-            tests.push(testName);
-          }
-        }
-      }
+    if (n?.kind !== ts.SyntaxKind.CallExpression) {
+      return false;
     }
 
+    if (!n?.arguments && !n?.arguments.length) {
+      return false;
+    }
+
+    if (n?.arguments[0] && !n?.arguments[0].text) {
+      return false;
+    }
+    if (
+      n?.expression?.escapedText !== "describe" &&
+      n?.expression?.escapedText !== "it"
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  walk(node: ts.SourceFile | ts.Node) {
     node.forEachChild((subNode: ts.Node) => {
+      const n = subNode as any;
+      const isTestNodeCheck = this.isTestNode(subNode);
+      if (this.isTestNode(subNode)) {
+        const testName = n?.arguments[0].text;
+        tests.push(testName);
+      }
       this.walk(subNode);
     });
 

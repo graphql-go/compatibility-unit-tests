@@ -17,6 +17,7 @@ var GraphqlJSImplementation = types.Implementation{
 		Name:          "graphql-graphql-js",
 		URL:           "https://github.com/graphql/graphql-js",
 		ReferenceName: "v0.6.0",
+		Dir:           "./repos/graphql-go-graphql/",
 	},
 }
 

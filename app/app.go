@@ -28,7 +28,9 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 	}
 
 	ex := extractor.Extractor{}
-	if _, err := ex.Extract(&extractor.ExtractorParams{}); err != nil {
+	if _, err := ex.Extract(&extractor.ExtractorParams{
+		RootDir: params.RefImplementation.Repo.Dir,
+	}); err != nil {
 		return nil, err
 	}
 

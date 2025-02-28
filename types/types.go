@@ -15,8 +15,9 @@ type Repository struct {
 }
 
 type Implementation struct {
-	Repo Repository
-	Type ImplementationType
+	Repo      Repository
+	Type      ImplementationType
+	TestNames []string
 }
 
 type ImplementationTest struct {

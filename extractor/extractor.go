@@ -6,7 +6,6 @@ import (
 	"go/parser"
 	"go/token"
 	"io/fs"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -61,7 +60,7 @@ func (e *Extractor) implementationTestNames(params ImplTestNamesParams) (map[typ
 			}
 
 		case types.RefImplementationType:
-			testNames, err := e.refTestNames(impl.Repo.Dir)
+			testNames, err := e.refTestNames(impl)
 			if err != nil {
 				return nil, err
 			}
@@ -165,13 +164,11 @@ func (e *Extractor) goTestNames(rootDir string) ([]string, error) {
 	return testNames, nil
 }
 
-func (e *Extractor) refTestNames(refRootDir string) ([]string, error) {
-	f, err := os.ReadFile(refRootDir)
+func (e *Extractor) refTestNames(impl types.Implementation) ([]string, error) {
+	f, err := os.ReadFile(impl.TestNamesFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println(f)
-
-	return []string{}, nil
+	return strings.Split(string(f), "\n"), nil
 }

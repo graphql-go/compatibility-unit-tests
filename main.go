@@ -36,7 +36,6 @@ func main() {
 	result, err := app.Run(mainApp.AppParams{
 		Implementation:    currentImplementation,
 		RefImplementation: implementation.GraphqlJSImplementation,
-		RootDir:           "./repos/graphql-go-graphql/",
 	})
 	if err != nil {
 		log.Fatal(err)

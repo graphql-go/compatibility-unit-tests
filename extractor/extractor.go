@@ -13,6 +13,7 @@ type ExtractorResult struct {
 }
 
 type ExtractorParams struct {
+	RootDir string
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
@@ -32,9 +33,7 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		return nil
 	}
 
-	implementationRootDir := "./repos/graphql-go-graphql/"
-
-	filepath.WalkDir(implementationRootDir, walk)
+	filepath.WalkDir(params.RootDir, walk)
 
 	return nil, nil
 }

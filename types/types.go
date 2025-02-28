@@ -16,8 +16,15 @@ type Repository struct {
 
 type Implementation struct {
 	Repo Repository
+	Type ImplementationType
 }
 
 type ImplementationTest struct {
 	Name string
+}
+
+type SuccessfulTest struct {
+}
+
+type FailedTest struct {
 }

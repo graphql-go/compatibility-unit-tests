@@ -34,7 +34,7 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 	ex := extractor.Extractor{}
 	extractResult, err := ex.Extract(&extractor.ExtractorParams{
 		ImplementationType:    params.Implementation.Type,
-		RefImplementationType: params.Implementation.Type,
+		RefImplementationType: params.RefImplementation.Type,
 		RootDir:               params.RefImplementation.Repo.Dir,
 	})
 	if err != nil {

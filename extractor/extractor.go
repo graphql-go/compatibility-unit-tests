@@ -1,6 +1,7 @@
 package extractor
 
 import (
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -8,13 +9,17 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"graphql-go/compatibility-unit-tests/types"
 )
 
 type Extractor struct {
 }
 
 type ExtractorParams struct {
-	RootDir string
+	ImplementationType    types.ImplementationType
+	RefImplementationType types.ImplementationType
+	RootDir               string
 }
 
 type ExtractorResult struct {
@@ -22,13 +27,7 @@ type ExtractorResult struct {
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-
-	testFiles, err := e.testFiles(params.RootDir)
-	if err != nil {
-		return nil, err
-	}
-
-	testNames, err := e.testNames(testFiles)
+	testNames, err := e.implementationTestNames(params.ImplementationType, params.RootDir)
 	if err != nil {
 		return nil, err
 	}
@@ -108,4 +107,35 @@ func (e *Extractor) testNames(testFiles []string) ([]string, error) {
 	}
 
 	return result, nil
+}
+
+func (e *Extractor) implementationTestNames(implementationType types.ImplementationType, rootDir string) ([]string, error) {
+
+	switch implementationType {
+	case types.GoImplementationType:
+		testNames, err := e.goTestNames(rootDir)
+		if err != nil {
+			return nil, err
+		}
+
+		return testNames, nil
+	default:
+		return []string{}, fmt.Errorf("unknown implementation type: %v", implementationType)
+	}
+
+	return []string{}, nil
+}
+
+func (e *Extractor) goTestNames(rootDir string) ([]string, error) {
+	testFiles, err := e.testFiles(rootDir)
+	if err != nil {
+		return nil, err
+	}
+
+	testNames, err := e.testNames(testFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	return testNames, nil
 }

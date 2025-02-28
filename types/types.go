@@ -4,6 +4,7 @@ type Repository struct {
 	Name          string
 	URL           string
 	ReferenceName string
+	Dir           string
 }
 
 type Implementation struct {

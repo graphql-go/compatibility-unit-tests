@@ -21,7 +21,8 @@ var GraphqlJSImplementation = types.Implementation{
 		ReferenceName: "v0.6.0",
 		Dir:           "./repos/graphql-graphql-js/",
 	},
-	Type: types.RefImplementationType,
+	Type:              types.RefImplementationType,
+	TestNamesFilePath: "./puller-js/unit-tests.txt",
 }
 
 var Implementations = []types.Implementation{GraphqlGoImplementation}

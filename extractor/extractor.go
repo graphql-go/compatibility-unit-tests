@@ -5,7 +5,6 @@ import (
 	"go/parser"
 	"go/token"
 	"io/fs"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,12 +13,12 @@ import (
 type Extractor struct {
 }
 
-type ExtractorResult struct {
-	TestFiles []string
-}
-
 type ExtractorParams struct {
 	RootDir string
+}
+
+type ExtractorResult struct {
+	TestNames []string
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
@@ -29,15 +28,13 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		return nil, err
 	}
 
-	funcNames, err := e.funcNames(testFiles)
+	testNames, err := e.testNames(testFiles)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println(funcNames)
-
 	return &ExtractorResult{
-		TestFiles: testFiles,
+		TestNames: testNames,
 	}, nil
 }
 
@@ -98,7 +95,7 @@ func (e *Extractor) readFuncNames(filePath string) ([]string, error) {
 	return funcNames, nil
 }
 
-func (e *Extractor) funcNames(testFiles []string) ([]string, error) {
+func (e *Extractor) testNames(testFiles []string) ([]string, error) {
 	result := []string{}
 
 	for _, filePath := range testFiles {

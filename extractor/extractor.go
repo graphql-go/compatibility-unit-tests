@@ -1,7 +1,6 @@
 package extractor
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
@@ -11,6 +10,7 @@ type Extractor struct {
 }
 
 type ExtractorResult struct {
+	TestFiles []string
 }
 
 type ExtractorParams struct {
@@ -18,23 +18,27 @@ type ExtractorParams struct {
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-	files := []string{}
+	testFiles := []string{}
 
 	walk := func(s string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
-		if !d.IsDir() {
-			fmt.Println(strings.HasSuffix(s, "_test.go"))
+		if d.IsDir() {
+			return nil
 		}
 
-		files = append(files, s)
+		if strings.HasSuffix(s, "_test.go") {
+			testFiles = append(testFiles, s)
+		}
 
 		return nil
 	}
 
 	filepath.WalkDir(params.RootDir, walk)
 
-	return nil, nil
+	return &ExtractorResult{
+		TestFiles: testFiles,
+	}, nil
 }

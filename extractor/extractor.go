@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"strings"
 )
 
 type Extractor struct {
@@ -25,7 +26,7 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		}
 
 		if !d.IsDir() {
-			fmt.Println(s)
+			fmt.Println(strings.HasSuffix(s, "_test.go"))
 		}
 
 		files = append(files, s)

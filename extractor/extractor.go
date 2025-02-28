@@ -1,8 +1,11 @@
 package extractor
 
 import (
+	"go/parser"
+	"go/token"
 	"io/fs"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -25,7 +28,12 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		return nil, err
 	}
 
-	log.Println(testFiles)
+	funcNames, err := e.funcNames(testFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(funcNames)
 
 	return &ExtractorResult{
 		TestFiles: testFiles,
@@ -54,4 +62,26 @@ func (e *Extractor) testFiles(rootDir string) ([]string, error) {
 	filepath.WalkDir(rootDir, walk)
 
 	return testFiles, nil
+}
+
+func (e *Extractor) funcNames(testFiles []string) ([]string, error) {
+	result := []string{}
+
+	filePath := testFiles[0]
+
+	goFile, err := os.Open(filePath)
+	if err != nil {
+		return result, err
+	}
+
+	fset := token.NewFileSet()
+	astFile, err := parser.ParseFile(fset, "", goFile, parser.ParseComments)
+	if err != nil {
+		return result, nil
+	}
+
+	log.Println(filePath)
+	log.Println(astFile.Decls)
+
+	return []string{}, nil
 }

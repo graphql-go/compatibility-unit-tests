@@ -15,9 +15,10 @@ type Repository struct {
 }
 
 type Implementation struct {
-	Repo      Repository
-	Type      ImplementationType
-	TestNames []string
+	Repo              Repository
+	Type              ImplementationType
+	TestNames         []string
+	TestNamesFilePath string
 }
 
 type ImplementationTest struct {

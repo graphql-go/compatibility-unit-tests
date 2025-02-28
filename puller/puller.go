@@ -2,6 +2,7 @@ package puller
 
 import (
 	"os"
+	"strings"
 
 	"github.com/go-git/go-git/v5"
 
@@ -36,6 +37,9 @@ func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
 			URL:      r.Repo.URL,
 			Progress: os.Stdout,
 		}); err != nil {
+			if strings.Contains(err.Error(), "repository already exists") {
+				return nil, nil
+			}
 			return nil, err
 		}
 	}

@@ -10,3 +10,7 @@ type Repository struct {
 type Implementation struct {
 	Repo Repository
 }
+
+type ImplementationTest struct {
+	Name string
+}

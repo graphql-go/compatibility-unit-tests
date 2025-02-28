@@ -2,6 +2,7 @@ package extractor
 
 import (
 	"io/fs"
+	"log"
 	"path/filepath"
 	"strings"
 )
@@ -18,6 +19,20 @@ type ExtractorParams struct {
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
+
+	testFiles, err := e.testFiles(params.RootDir)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(testFiles)
+
+	return &ExtractorResult{
+		TestFiles: testFiles,
+	}, nil
+}
+
+func (e *Extractor) testFiles(rootDir string) ([]string, error) {
 	testFiles := []string{}
 
 	walk := func(s string, d fs.DirEntry, err error) error {
@@ -36,9 +51,7 @@ func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
 		return nil
 	}
 
-	filepath.WalkDir(params.RootDir, walk)
+	filepath.WalkDir(rootDir, walk)
 
-	return &ExtractorResult{
-		TestFiles: testFiles,
-	}, nil
+	return testFiles, nil
 }

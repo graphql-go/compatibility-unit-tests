@@ -1,6 +1,7 @@
 package extractor
 
 import (
+	"go/ast"
 	"go/parser"
 	"go/token"
 	"io/fs"
@@ -64,24 +65,50 @@ func (e *Extractor) testFiles(rootDir string) ([]string, error) {
 	return testFiles, nil
 }
 
-func (e *Extractor) funcNames(testFiles []string) ([]string, error) {
-	result := []string{}
-
-	filePath := testFiles[0]
-
+func (e *Extractor) readFile(filePath string) (*os.File, error) {
 	goFile, err := os.Open(filePath)
 	if err != nil {
-		return result, err
+		return nil, err
 	}
 
+	return goFile, nil
+}
+
+func (e *Extractor) readFuncNames(filePath string) ([]string, error) {
+	goFile, err := e.readFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer goFile.Close()
+
+	funcNames := []string{}
 	fset := token.NewFileSet()
 	astFile, err := parser.ParseFile(fset, "", goFile, parser.ParseComments)
 	if err != nil {
-		return result, nil
+		return nil, err
 	}
 
-	log.Println(filePath)
-	log.Println(astFile.Decls)
+	for _, decl := range astFile.Decls {
+		switch t := decl.(type) {
+		case *ast.FuncDecl:
+			funcNames = append(funcNames, t.Name.Name)
+		}
+	}
 
-	return []string{}, nil
+	return funcNames, nil
+}
+
+func (e *Extractor) funcNames(testFiles []string) ([]string, error) {
+	result := []string{}
+
+	for _, filePath := range testFiles {
+		funcNames, err := e.readFuncNames(filePath)
+		if err != nil {
+			return result, err
+		}
+
+		result = append(result, funcNames...)
+	}
+
+	return result, nil
 }

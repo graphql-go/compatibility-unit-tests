@@ -32,9 +32,8 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 
 	ex := extractor.Extractor{}
 	if _, err := ex.Extract(&extractor.ExtractorParams{
-		ImplementationType:    params.Implementation.Type,
-		RefImplementationType: params.RefImplementation.Type,
-		RootDir:               params.RefImplementation.Repo.Dir,
+		Implementation:    params.Implementation,
+		RefImplementation: params.RefImplementation,
 	}); err != nil {
 		return nil, err
 	}

@@ -23,18 +23,48 @@ type ExtractorParams struct {
 }
 
 type ExtractorResult struct {
-	TestNames []string
+	ReferenceTestNames      []string
+	ImplementationTestNames []string
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-	testNames, err := e.implementationTestNames(params.ImplementationType, params.RootDir)
+	refTestNames, err := e.implementationTestNames(params.RefImplementationType, params.RootDir)
+	if err != nil {
+		return nil, err
+	}
+
+	implTestNames, err := e.implementationTestNames(params.ImplementationType, params.RootDir)
 	if err != nil {
 		return nil, err
 	}
 
 	return &ExtractorResult{
-		TestNames: testNames,
+		ReferenceTestNames:      refTestNames,
+		ImplementationTestNames: implTestNames,
 	}, nil
+}
+
+func (e *Extractor) implementationTestNames(implementationType types.ImplementationType, rootDir string) ([]string, error) {
+	result := []string{}
+
+	switch implementationType {
+	case types.GoImplementationType:
+		testNames, err := e.goTestNames(rootDir)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, testNames...)
+	case types.RefImplementationType:
+		testNames, err := e.refTestNames(rootDir)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, testNames...)
+	default:
+		return []string{}, fmt.Errorf("unknown implementation type: %v", implementationType)
+	}
+
+	return result, nil
 }
 
 func (e *Extractor) testFiles(rootDir string) ([]string, error) {
@@ -109,23 +139,6 @@ func (e *Extractor) testNames(testFiles []string) ([]string, error) {
 	return result, nil
 }
 
-func (e *Extractor) implementationTestNames(implementationType types.ImplementationType, rootDir string) ([]string, error) {
-
-	switch implementationType {
-	case types.GoImplementationType:
-		testNames, err := e.goTestNames(rootDir)
-		if err != nil {
-			return nil, err
-		}
-
-		return testNames, nil
-	default:
-		return []string{}, fmt.Errorf("unknown implementation type: %v", implementationType)
-	}
-
-	return []string{}, nil
-}
-
 func (e *Extractor) goTestNames(rootDir string) ([]string, error) {
 	testFiles, err := e.testFiles(rootDir)
 	if err != nil {
@@ -138,4 +151,8 @@ func (e *Extractor) goTestNames(rootDir string) ([]string, error) {
 	}
 
 	return testNames, nil
+}
+
+func (e *Extractor) refTestNames(rootDir string) ([]string, error) {
+	return []string{}, nil
 }

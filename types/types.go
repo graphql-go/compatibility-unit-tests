@@ -1,5 +1,12 @@
 package types
 
+type ImplementationType uint
+
+const (
+	GoImplementationType = iota + 1
+	RefImplementationType
+)
+
 type Repository struct {
 	Name          string
 	URL           string

@@ -28,9 +28,19 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 	}
 
 	ex := extractor.Extractor{}
-	if _, err := ex.Extract(&extractor.ExtractorParams{
+	extractResult, err := ex.Extract(&extractor.ExtractorParams{
 		RootDir: params.RefImplementation.Repo.Dir,
-	}); err != nil {
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	val := validator.Validator{}
+	validatorResult, err := val.Validate(&validator.ValidatorParams{
+		ImplementationTests:    extractResult.TestNames,
+		RefImplementationTests: extractResult.TestNames,
+	})
+	if err != nil {
 		return nil, err
 	}
 

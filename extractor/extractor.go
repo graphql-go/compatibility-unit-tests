@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,51 +18,62 @@ type Extractor struct {
 }
 
 type ExtractorParams struct {
-	ImplementationType    types.ImplementationType
-	RefImplementationType types.ImplementationType
-	RootDir               string
+	Implementation    types.Implementation
+	RefImplementation types.Implementation
 }
 
 type ExtractorResult struct {
-	ReferenceTestNames      []string
-	ImplementationTestNames []string
+	TestNames map[types.ImplementationType]types.Implementation
 }
 
 func (e *Extractor) Extract(params *ExtractorParams) (*ExtractorResult, error) {
-	refTestNames, err := e.implementationTestNames(params.RefImplementationType, params.RootDir)
-	if err != nil {
-		return nil, err
-	}
-
-	implTestNames, err := e.implementationTestNames(params.ImplementationType, params.RootDir)
+	testNames, err := e.implementationTestNames(ImplTestNamesParams{
+		Implementations: []types.Implementation{params.Implementation, params.RefImplementation},
+	})
 	if err != nil {
 		return nil, err
 	}
 
 	return &ExtractorResult{
-		ReferenceTestNames:      refTestNames,
-		ImplementationTestNames: implTestNames,
+		TestNames: testNames,
 	}, nil
 }
 
-func (e *Extractor) implementationTestNames(implementationType types.ImplementationType, rootDir string) ([]string, error) {
-	result := []string{}
+type ImplTestNamesParams struct {
+	Implementations []types.Implementation
+}
 
-	switch implementationType {
-	case types.GoImplementationType:
-		testNames, err := e.goTestNames(rootDir)
-		if err != nil {
-			return nil, err
+func (e *Extractor) implementationTestNames(params ImplTestNamesParams) (map[types.ImplementationType]types.Implementation, error) {
+	result := map[types.ImplementationType]types.Implementation{}
+
+	for i := 0; i < len(params.Implementations); i++ {
+		impl := params.Implementations[i]
+		switch impl.Type {
+		case types.GoImplementationType:
+			testNames, err := e.goTestNames(impl.Repo.Dir)
+			if err != nil {
+				return nil, err
+			}
+			result[types.GoImplementationType] = types.Implementation{
+				Repo:      impl.Repo,
+				Type:      types.GoImplementationType,
+				TestNames: testNames,
+			}
+
+		case types.RefImplementationType:
+			testNames, err := e.refTestNames(impl.Repo.Dir)
+			if err != nil {
+				return nil, err
+			}
+			result[types.RefImplementationType] = types.Implementation{
+				Repo:      impl.Repo,
+				Type:      types.GoImplementationType,
+				TestNames: testNames,
+			}
+
+		default:
+			return result, fmt.Errorf("unknown implementation type: %v", impl.Type)
 		}
-		result = append(result, testNames...)
-	case types.RefImplementationType:
-		testNames, err := e.refTestNames(rootDir)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, testNames...)
-	default:
-		return []string{}, fmt.Errorf("unknown implementation type: %v", implementationType)
 	}
 
 	return result, nil
@@ -153,6 +165,13 @@ func (e *Extractor) goTestNames(rootDir string) ([]string, error) {
 	return testNames, nil
 }
 
-func (e *Extractor) refTestNames(rootDir string) ([]string, error) {
+func (e *Extractor) refTestNames(refRootDir string) ([]string, error) {
+	f, err := os.ReadFile(refRootDir)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(f)
+
 	return []string{}, nil
 }

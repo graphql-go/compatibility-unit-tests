@@ -9,6 +9,7 @@ var GraphqlGoImplementation = types.Implementation{
 		Name:          "graphql-go-graphql",
 		URL:           "https://github.com/graphql-go/graphql",
 		ReferenceName: "refs/heads/master",
+		Dir:           "./repos/graphql-go-graphql/",
 	},
 	Type: types.GoImplementationType,
 }
@@ -18,7 +19,7 @@ var GraphqlJSImplementation = types.Implementation{
 		Name:          "graphql-graphql-js",
 		URL:           "https://github.com/graphql/graphql-js",
 		ReferenceName: "v0.6.0",
-		Dir:           "./repos/graphql-go-graphql/",
+		Dir:           "./repos/graphql-graphql-js/",
 	},
 	Type: types.RefImplementationType,
 }

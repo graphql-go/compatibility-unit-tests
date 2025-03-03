@@ -8,12 +8,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"graphql-go/compatibility-unit-tests/types"
 )
 
 type GoExtractor struct{}
 
-func (e *GoExtractor) TestNames(rootDir string) ([]string, error) {
-	testFiles, err := e.readTestFiles(rootDir)
+func (e *GoExtractor) TestNames(impl types.Implementation) ([]string, error) {
+	testFiles, err := e.readTestFiles(impl.Repo.Dir)
 	if err != nil {
 		return nil, err
 	}

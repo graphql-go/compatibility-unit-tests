@@ -43,7 +43,7 @@ func (e *Extractor) implementationTestNames(params ImplTestNamesParams) (map[typ
 		switch impl.Type {
 		case types.GoImplementationType:
 			goExtractor := GoExtractor{}
-			testNames, err := goExtractor.TestNames(impl.Repo.Dir)
+			testNames, err := goExtractor.TestNames(impl)
 			if err != nil {
 				return nil, err
 			}

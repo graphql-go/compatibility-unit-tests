@@ -14,13 +14,19 @@ import (
 
 var choices = []string{}
 
-var style = lipgloss.NewStyle().
+var successfulStyle = lipgloss.NewStyle().
 	Bold(true).
-	Foreground(lipgloss.Color("#FAFAFA")).
-	Background(lipgloss.Color("#7D56F4")).
-	PaddingTop(2).
-	PaddingLeft(4).
-	Width(22)
+	Foreground(lipgloss.Color("#4CAF50")).
+	PaddingTop(0).
+	PaddingLeft(0).
+	Width(40)
+
+var failedStyle = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.Color("#A52A2A")).
+	PaddingTop(0).
+	PaddingLeft(0).
+	Width(40)
 
 func init() {
 	for _, i := range implementation.Implementations {
@@ -55,6 +61,6 @@ func main() {
 	sTests := strconv.Itoa(len(result.SuccessfulTests))
 	fTests := strconv.Itoa(len(result.FailedTests))
 
-	log.Printf("successful tests count: %+v", style.Render(sTests))
-	log.Printf("failed tests count: %+v", style.Render(fTests))
+	fmt.Println(successfulStyle.Render(fmt.Sprintf("successful tests count: %+v", sTests)))
+	fmt.Println(failedStyle.Render(fmt.Sprintf("failed tests count: %+v", fTests)))
 }

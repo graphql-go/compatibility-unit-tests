@@ -41,5 +41,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("result: %+v", result)
+	log.Printf("successful tests count: %+v", len(result.SuccessfulTests))
+	log.Printf("failed tests count: %+v", len(result.FailedTests))
 }

@@ -8,8 +8,8 @@ type Validator struct {
 }
 
 type ValidatorParams struct {
-	ImplementationTests    []types.ImplementationTest
-	RefImplementationTests []types.ImplementationTest
+	ImplementationTests    []types.Implementation
+	RefImplementationTests []types.Implementation
 }
 
 type ValidatorResult struct {

@@ -4,12 +4,15 @@ import (
 	"graphql-go/compatibility-unit-tests/extractor"
 	"graphql-go/compatibility-unit-tests/puller"
 	"graphql-go/compatibility-unit-tests/types"
+	"graphql-go/compatibility-unit-tests/validator"
 )
 
 type App struct {
 }
 
 type AppResult struct {
+	SuccessfulTests []types.SuccessfulTest
+	FailedTests     []types.FailedTest
 }
 
 type AppParams struct {
@@ -29,10 +32,23 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 
 	ex := extractor.Extractor{}
 	if _, err := ex.Extract(&extractor.ExtractorParams{
-		RootDir: params.RefImplementation.Repo.Dir,
+		Implementation:    params.Implementation,
+		RefImplementation: params.RefImplementation,
 	}); err != nil {
 		return nil, err
 	}
 
-	return &AppResult{}, nil
+	val := validator.Validator{}
+	validatorResult, err := val.Validate(&validator.ValidatorParams{
+		ImplementationTests:    []types.ImplementationTest{},
+		RefImplementationTests: []types.ImplementationTest{},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &AppResult{
+		SuccessfulTests: validatorResult.SuccessfulTests,
+		FailedTests:     validatorResult.FailedTests,
+	}, nil
 }

@@ -2,8 +2,6 @@ package extractor
 
 import (
 	"fmt"
-	"os"
-	"strings"
 
 	"graphql-go/compatibility-unit-tests/types"
 )
@@ -56,7 +54,8 @@ func (e *Extractor) implementationTestNames(params ImplTestNamesParams) (map[typ
 			}
 
 		case types.RefImplementationType:
-			testNames, err := e.refTestNames(impl)
+			refExtractor := RefExtractor{}
+			testNames, err := refExtractor.TestNames(impl)
 			if err != nil {
 				return nil, err
 			}
@@ -72,13 +71,4 @@ func (e *Extractor) implementationTestNames(params ImplTestNamesParams) (map[typ
 	}
 
 	return result, nil
-}
-
-func (e *Extractor) refTestNames(impl types.Implementation) ([]string, error) {
-	f, err := os.ReadFile(impl.TestNamesFilePath)
-	if err != nil {
-		return nil, err
-	}
-
-	return strings.Split(string(f), "\n"), nil
 }

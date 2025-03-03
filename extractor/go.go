@@ -12,6 +12,8 @@ import (
 	"graphql-go/compatibility-unit-tests/types"
 )
 
+const testPrefix string = "Test"
+
 type GoExtractor struct{}
 
 func (e *GoExtractor) TestNames(impl types.Implementation) ([]string, error) {
@@ -20,9 +22,15 @@ func (e *GoExtractor) TestNames(impl types.Implementation) ([]string, error) {
 		return nil, err
 	}
 
-	testNames, err := e.readTestNames(testFiles)
+	tNames, err := e.readTestNames(testFiles)
 	if err != nil {
 		return nil, err
+	}
+
+	testNames := []string{}
+	for _, testName := range tNames {
+		t := strings.TrimPrefix(testName, testPrefix)
+		testNames = append(testNames, t)
 	}
 
 	return testNames, nil

@@ -26,7 +26,9 @@ type ImplementationTest struct {
 }
 
 type SuccessfulTest struct {
+	Name string
 }
 
 type FailedTest struct {
+	Name string
 }

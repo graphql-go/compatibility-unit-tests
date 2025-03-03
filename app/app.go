@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"graphql-go/compatibility-unit-tests/extractor"
 	"graphql-go/compatibility-unit-tests/puller"
 	"graphql-go/compatibility-unit-tests/types"
@@ -31,17 +33,28 @@ func (app *App) Run(params AppParams) (*AppResult, error) {
 	}
 
 	ex := extractor.Extractor{}
-	if _, err := ex.Extract(&extractor.ExtractorParams{
+	extractorResult, err := ex.Extract(&extractor.ExtractorParams{
 		Implementation:    params.Implementation,
 		RefImplementation: params.RefImplementation,
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, err
+	}
+
+	implementationTests, ok := extractorResult.TestNames[types.GoImplementationType]
+	if !ok {
+		return nil, fmt.Errorf("failed to find implementation type with key: %v", types.GoImplementationType)
+	}
+
+	refImplementationTests, ok := extractorResult.TestNames[types.RefImplementationType]
+	if !ok {
+		return nil, fmt.Errorf("failed to find implementation type with key: %v", types.RefImplementationType)
 	}
 
 	val := validator.Validator{}
 	validatorResult, err := val.Validate(&validator.ValidatorParams{
-		ImplementationTests:    []types.ImplementationTest{},
-		RefImplementationTests: []types.ImplementationTest{},
+		ImplementationTests:    implementationTests,
+		RefImplementationTests: refImplementationTests,
 	})
 	if err != nil {
 		return nil, err

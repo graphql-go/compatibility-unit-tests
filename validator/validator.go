@@ -8,8 +8,8 @@ type Validator struct {
 }
 
 type ValidatorParams struct {
-	ImplementationTests    []types.ImplementationTest
-	RefImplementationTests []types.ImplementationTest
+	ImplementationTests    types.Implementation
+	RefImplementationTests types.Implementation
 }
 
 type ValidatorResult struct {
@@ -18,8 +18,30 @@ type ValidatorResult struct {
 }
 
 func (v *Validator) Validate(params *ValidatorParams) (*ValidatorResult, error) {
+	refImplTestsMap := make(map[string]string, 0)
+
+	successfultTests := []types.SuccessfulTest{}
+	failedTests := []types.FailedTest{}
+
+	for _, testName := range params.RefImplementationTests.TestNames {
+		refImplTestsMap[testName] = testName
+	}
+
+	for _, testName := range params.ImplementationTests.TestNames {
+		tName, found := refImplTestsMap[testName]
+		if found {
+			successfultTests = append(successfultTests, types.SuccessfulTest{
+				Name: tName,
+			})
+		} else {
+			failedTests = append(failedTests, types.FailedTest{
+				Name: tName,
+			})
+		}
+	}
+
 	return &ValidatorResult{
-		SuccessfulTests: []types.SuccessfulTest{},
-		FailedTests:     []types.FailedTest{},
+		SuccessfulTests: successfultTests,
+		FailedTests:     failedTests,
 	}, nil
 }

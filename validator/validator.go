@@ -1,6 +1,8 @@
 package validator
 
 import (
+	"log"
+
 	"graphql-go/compatibility-unit-tests/types"
 )
 
@@ -18,8 +20,30 @@ type ValidatorResult struct {
 }
 
 func (v *Validator) Validate(params *ValidatorParams) (*ValidatorResult, error) {
+	implementationTests := make(map[string]string, 0)
+
+	successfultTests := []types.SuccessfulTest{}
+	failedTests := []types.FailedTest{}
+
+	for _, testName := range params.RefImplementationTests.TestNames {
+		implementationTests[testName] = testName
+	}
+
+	for _, testName := range params.ImplementationTests.TestNames {
+		tName, found := implementationTests[testName]
+		if found {
+			successfultTests = append(successfultTests, types.SuccessfulTest{
+				Name: tName,
+			})
+		} else {
+			failedTests = append(failedTests, types.FailedTest{
+				Name: tName,
+			})
+		}
+	}
+
 	return &ValidatorResult{
-		SuccessfulTests: []types.SuccessfulTest{},
-		FailedTests:     []types.FailedTest{},
+		SuccessfulTests: successfultTests,
+		FailedTests:     failedTests,
 	}, nil
 }

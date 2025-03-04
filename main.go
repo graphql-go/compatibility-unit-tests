@@ -14,7 +14,7 @@ var choices = []string{}
 
 func init() {
 	for _, i := range implementation.Implementations {
-		choices = append(choices, i.Repo.URL)
+		choices = append(choices, i.Repo.String())
 	}
 }
 

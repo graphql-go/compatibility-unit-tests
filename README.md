@@ -1,5 +1,9 @@
 # Compatibility Unit Tests
-Validation compatibility library for comparing GraphQL implementations unit tests results.
+
+Golang CLI library for **validating compatibility** of any GraphQL implementation against the GraphQL reference implementation(`graphql-js`).
+
+Current implementation supports the following GraphQL implementations:
+- [https://github.com/graphql-go/graphql](https://github.com/graphql-go/graphql)
 
 ## Quick Start
 
@@ -10,16 +14,8 @@ $ ./bin/start.sh
 
 ```
 
-```bash
-(•) https://github.com/graphql-go/graphql
+![Screenshot from 2025-03-04 10-22-32](https://github.com/user-attachments/assets/8c798c3d-4ac4-411a-9fcf-972e536eaedd)
 
-(press q to quit)
-Enumerating objects: 5158, done.
-Counting objects: 100% (96/96), done.
-Compressing objects: 100% (58/58), done.
-Total 5158 (delta 52), reused 52 (delta 34), pack-reused 5062 (from 3)
-2025/02/10 13:31:56 result: &{}
-```
 
 ## Validation Compatibility 
 

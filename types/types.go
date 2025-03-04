@@ -18,8 +18,8 @@ type Repository struct {
 	Dir           string
 }
 
-func (r *Repository) String() string {
-	base := fmt.Sprintf("Implementation: %s\n", taggedRepoURL)
+func (r *Repository) String(prefix string) string {
+	base := fmt.Sprintf("%s: %s\n", prefix, taggedRepoURL)
 	return fmt.Sprintf(base, r.URL, r.ReferenceName)
 }
 
@@ -30,8 +30,8 @@ type Implementation struct {
 	TestNamesFilePath string
 }
 
-func (i *Implementation) MapKey() string {
-	return i.Repo.String()
+func (i *Implementation) MapKey(prefix string) string {
+	return i.Repo.String(prefix)
 }
 
 type ImplementationTest struct {

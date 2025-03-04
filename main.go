@@ -14,15 +14,18 @@ var choices = []string{}
 
 func init() {
 	for _, i := range implementation.Implementations {
-		choices = append(choices, i.Repo.String())
+		choices = append(choices, i.Repo.String("Implementation"))
 	}
 }
 
 func main() {
 	cli := cmd.CLI{}
 
+	header := implementation.RefImplementation.Repo.String("Reference Implementation")
+
 	cliResult, err := cli.Run(&cmd.RunParams{
 		Choices: choices,
+		Header:  header,
 	})
 	if err != nil {
 		log.Fatal(err)

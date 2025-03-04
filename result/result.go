@@ -33,8 +33,11 @@ func (r *Result) Summary(s *SummaryParams) string {
 	sTests := strconv.Itoa(s.SuccessfulTests)
 	fTests := strconv.Itoa(s.FailedTests)
 
-	successfulResult := successfulStyle.Render(fmt.Sprintf("successful tests count: %+v", sTests))
-	failedResult := failedStyle.Render(fmt.Sprintf("failed tests count: %+v", fTests))
+	successfulSummary := fmt.Sprintf("successful compatible tests count: %+v", sTests)
+	failedSummary := fmt.Sprintf("failed compatible tests count: %+v", fTests)
+
+	successfulResult := successfulStyle.Render(successfulSummary)
+	failedResult := failedStyle.Render(failedSummary)
 
 	return fmt.Sprintf("%s\n%s", successfulResult, failedResult)
 }

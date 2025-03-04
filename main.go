@@ -3,30 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
 
 	mainApp "graphql-go/compatibility-unit-tests/app"
 	"graphql-go/compatibility-unit-tests/cmd"
 	"graphql-go/compatibility-unit-tests/implementation"
-
-	"github.com/charmbracelet/lipgloss"
+	"graphql-go/compatibility-unit-tests/result"
 )
 
 var choices = []string{}
-
-var successfulStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.Color("#4CAF50")).
-	PaddingTop(0).
-	PaddingLeft(0).
-	Width(40)
-
-var failedStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.Color("#A52A2A")).
-	PaddingTop(0).
-	PaddingLeft(0).
-	Width(40)
 
 func init() {
 	for _, i := range implementation.Implementations {
@@ -50,7 +34,7 @@ func main() {
 	}
 
 	app := mainApp.App{}
-	result, err := app.Run(mainApp.AppParams{
+	r, err := app.Run(mainApp.AppParams{
 		Implementation:    currentImplementation,
 		RefImplementation: implementation.GraphqlJSImplementation,
 	})
@@ -58,9 +42,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sTests := strconv.Itoa(len(result.SuccessfulTests))
-	fTests := strconv.Itoa(len(result.FailedTests))
+	summaryParams := &result.SummaryParams{
+		SuccessfulTests: len(r.SuccessfulTests),
+		FailedTests:     len(r.FailedTests),
+	}
+	result := result.Result{}
 
-	fmt.Println(successfulStyle.Render(fmt.Sprintf("successful tests count: %+v", sTests)))
-	fmt.Println(failedStyle.Render(fmt.Sprintf("failed tests count: %+v", fTests)))
+	fmt.Println(result.Summary(summaryParams))
 }

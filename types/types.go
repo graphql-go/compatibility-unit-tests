@@ -1,5 +1,9 @@
 package types
 
+import "fmt"
+
+const taggedRepoURL string = "%s/releases/tag/%s"
+
 type ImplementationType uint
 
 const (
@@ -14,11 +18,19 @@ type Repository struct {
 	Dir           string
 }
 
+func (r *Repository) String() string {
+	return fmt.Sprintf(taggedRepoURL, r.URL, r.ReferenceName)
+}
+
 type Implementation struct {
 	Repo              Repository
 	Type              ImplementationType
 	TestNames         []string
 	TestNamesFilePath string
+}
+
+func (i *Implementation) MapKey() string {
+	return i.Repo.String()
 }
 
 type ImplementationTest struct {

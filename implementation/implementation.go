@@ -25,10 +25,12 @@ var GraphqlJSImplementation = types.Implementation{
 	TestNamesFilePath: "./puller-js/unit-tests.txt",
 }
 
+var RefImplementation = GraphqlJSImplementation
+
 var Implementations = []types.Implementation{GraphqlGoImplementation}
 
-var gqlGoImplURL = GraphqlGoImplementation.MapKey()
-var jsImplURL = GraphqlJSImplementation.MapKey()
+var gqlGoImplURL = GraphqlGoImplementation.MapKey("Implementation")
+var jsImplURL = GraphqlJSImplementation.MapKey("Implementation")
 
 var ImplementationsMap = map[string]types.Implementation{
 	gqlGoImplURL: GraphqlGoImplementation,

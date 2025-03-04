@@ -10,6 +10,11 @@ type BubbleTea struct {
 	cursor  int
 	choice  string
 	choices []string
+	ui      UI
+}
+
+type UI struct {
+	header string
 }
 
 func (b BubbleTea) Init() tea.Cmd {
@@ -46,6 +51,7 @@ func (b BubbleTea) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (b BubbleTea) View() string {
 	s := strings.Builder{}
+	s.WriteString(b.ui.header)
 	s.WriteString("")
 
 	for i := 0; i < len(b.choices); i++ {
@@ -68,11 +74,19 @@ type RunResult struct {
 
 type BubbleTeaParams struct {
 	Choices []string
+	UI      BubbleTeaUIParams
+}
+
+type BubbleTeaUIParams struct {
+	Header string
 }
 
 func NewBubbleTea(p *BubbleTeaParams) *BubbleTea {
 	return &BubbleTea{
 		choices: p.Choices,
+		ui: UI{
+			header: p.UI.Header,
+		},
 	}
 }
 

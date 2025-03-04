@@ -7,6 +7,7 @@ import (
 	mainApp "graphql-go/compatibility-unit-tests/app"
 	"graphql-go/compatibility-unit-tests/cmd"
 	"graphql-go/compatibility-unit-tests/implementation"
+	"graphql-go/compatibility-unit-tests/result"
 )
 
 var choices = []string{}
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	app := mainApp.App{}
-	result, err := app.Run(mainApp.AppParams{
+	r, err := app.Run(mainApp.AppParams{
 		Implementation:    currentImplementation,
 		RefImplementation: implementation.GraphqlJSImplementation,
 	})
@@ -41,6 +42,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("successful tests count: %+v", len(result.SuccessfulTests))
-	log.Printf("failed tests count: %+v", len(result.FailedTests))
+	summaryParams := &result.SummaryParams{
+		SuccessfulTests: len(r.SuccessfulTests),
+		FailedTests:     len(r.FailedTests),
+	}
+	result := result.Result{}
+
+	fmt.Println(result.Summary(summaryParams))
 }

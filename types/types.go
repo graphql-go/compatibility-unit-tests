@@ -19,7 +19,8 @@ type Repository struct {
 }
 
 func (r *Repository) String() string {
-	return fmt.Sprintf(taggedRepoURL, r.URL, r.ReferenceName)
+	base := fmt.Sprintf("Implementation: %s\n", taggedRepoURL)
+	return fmt.Sprintf(base, r.URL, r.ReferenceName)
 }
 
 type Implementation struct {

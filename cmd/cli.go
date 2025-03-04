@@ -16,11 +16,15 @@ type RunResult struct {
 
 type RunParams struct {
 	Choices []string
+	Header  string
 }
 
 func (c *CLI) Run(p *RunParams) (*RunResult, error) {
 	bt := bubbletea.NewBubbleTea(&bubbletea.BubbleTeaParams{
 		Choices: p.Choices,
+		UI: bubbletea.BubbleTeaUIParams{
+			Header: p.Header,
+		},
 	})
 
 	btRunResult, err := bt.Run()

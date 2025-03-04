@@ -4,6 +4,9 @@ import (
 	"graphql-go/compatibility-unit-tests/types"
 )
 
+const ImplementationPrefix = "Implementation"
+const RefImplementationPrefix = "Reference Implementation"
+
 var GraphqlGoImplementation = types.Implementation{
 	Repo: types.Repository{
 		Name:          "graphql-go-graphql",
@@ -29,8 +32,8 @@ var RefImplementation = GraphqlJSImplementation
 
 var Implementations = []types.Implementation{GraphqlGoImplementation}
 
-var gqlGoImplURL = GraphqlGoImplementation.MapKey("Implementation")
-var jsImplURL = GraphqlJSImplementation.MapKey("Implementation")
+var gqlGoImplURL = GraphqlGoImplementation.MapKey(ImplementationPrefix)
+var jsImplURL = GraphqlJSImplementation.MapKey(ImplementationPrefix)
 
 var ImplementationsMap = map[string]types.Implementation{
 	gqlGoImplURL: GraphqlGoImplementation,

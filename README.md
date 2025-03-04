@@ -59,5 +59,7 @@ There are multiple **GraphQL implementations** in different languages such in Go
 - https://github.com/99designs/gqlgen
 - https://github.com/graph-gophers/graphql-go
 
-Current work covers compatibility validation in terms of checking tests names mapping, but this could be extended into including the **body and result** of each test and increasing the comparison so could be used for checking the compatibility with other implementations in deeper checks.
+Current work covers compatibility validation in terms of checking the tests names of the GraphQL reference implementation against the choosen implementation.
+
+This could be extended into including the **body and result** of each test and improving the comparison and making a robust and deeper checks.
 

@@ -14,7 +14,8 @@ $ ./bin/start.sh
 
 ```
 
-![Screenshot from 2025-03-04 10-22-32](https://github.com/user-attachments/assets/8c798c3d-4ac4-411a-9fcf-972e536eaedd)
+![Screenshot from 2025-03-04 14-00-43](https://github.com/user-attachments/assets/d0040404-3d70-4b4e-9051-f6f520178075)
+
 
 
 ## Validation Compatibility 

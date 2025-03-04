@@ -1,6 +1,7 @@
 # Compatibility Unit Tests
 
-Golang CLI library for **validating compatibility** of any GraphQL implementation against the GraphQL reference implementation(`graphql-js`).
+Golang CLI library for **validating compatibility** of any GraphQL implementation against the GraphQL reference implementation: [graphql-js](https://github.com/graphql/graphql-js).
+
 
 Current implementation supports the following GraphQL implementations:
 - [https://github.com/graphql-go/graphql](https://github.com/graphql-go/graphql)

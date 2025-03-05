@@ -40,7 +40,7 @@ The name is converted to Go test name in the following syntax:
 ExecuteHandlesExecutionWithAComplexSchema_ExecutesUsingASchema
 ```
 
-### Details
+### Implementation Details
 
 1- `extractor-js`: Pulls the tests names from the **JavaScript GraphQL reference implementation**.
 

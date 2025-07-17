@@ -55,7 +55,9 @@ func (e *GoExtractor) readTestFiles(rootDir string) ([]string, error) {
 		return nil
 	}
 
-	filepath.WalkDir(rootDir, walk)
+	if err := filepath.WalkDir(rootDir, walk); err != nil {
+    return testFiles, err
+  }
 
 	return testFiles, nil
 }

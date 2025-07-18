@@ -4,7 +4,7 @@ import (
 	"graphql-go/compatibility-unit-tests/types"
 )
 
-const ImplementationPrefix = "Implementation"
+const ImplementationPrefix = "Impl"
 const RefImplementationPrefix = "Reference Implementation"
 
 var GraphqlGoImplementation = types.Implementation{

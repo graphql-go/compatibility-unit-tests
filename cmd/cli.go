@@ -7,9 +7,6 @@ import (
 type CLI struct {
 }
 
-type model struct {
-}
-
 type RunResult struct {
 	Choice string
 }

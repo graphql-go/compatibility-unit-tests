@@ -36,7 +36,7 @@ func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
 		}
 		if _, err := git.PlainClone(name, false, &git.CloneOptions{
 			URL:           r.Repo.URL,
-			ReferenceName: plumbing.ReferenceName(r.Repo.ReferenceName),
+			ReferenceName: plumbing.NewTagReferenceName(r.Repo.ReferenceName),
 			Progress:      os.Stdout,
 		}); err != nil {
 			if strings.Contains(err.Error(), "repository already exists") {

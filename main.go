@@ -12,14 +12,6 @@ import (
 	"graphql-go/compatibility-unit-tests/result"
 )
 
-var choices = []string{}
-
-func init() {
-	for _, i := range implementation.Implementations {
-		choices = append(choices, i.Repo.String(implementation.ImplementationPrefix))
-	}
-}
-
 func main() {
 	cfg := config.New()
 

@@ -4,36 +4,47 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/graphql-go/compatibility-base/bubbletea"
+	"github.com/graphql-go/compatibility-base/cmd"
+	"github.com/graphql-go/compatibility-base/config"
 	mainApp "graphql-go/compatibility-unit-tests/app"
-	"graphql-go/compatibility-unit-tests/cmd"
 	"graphql-go/compatibility-unit-tests/implementation"
 	"graphql-go/compatibility-unit-tests/result"
 )
 
-var choices = []string{}
-
-func init() {
-	for _, i := range implementation.Implementations {
-		choices = append(choices, i.Repo.String(implementation.ImplementationPrefix))
-	}
-}
-
 func main() {
-	cli := cmd.CLI{}
+	cfg := config.New()
 
-	header := implementation.RefImplementation.Repo.String(implementation.RefImplementationPrefix)
+	choicesModelUIHeader := cfg.GraphqlJSImplementation.Repo.String(implementation.RefImplementationPrefix)
 
-	cliResult, err := cli.Run(&cmd.RunParams{
-		Choices: choices,
-		Header:  header,
-	})
-	if err != nil {
-		log.Fatal(err)
+	cmdParams := cmd.NewParams{
+		Bubbletea: bubbletea.New(&bubbletea.Params{
+			Models: bubbletea.Models{
+				bubbletea.NewChoicesModel(&bubbletea.ChoicesModelParams{
+					Order:   1,
+					Choices: cfg.AvailableImplementations,
+					UI: bubbletea.ChoicesModelUIParams{
+						Header: choicesModelUIHeader,
+					},
+				}),
+			},
+			BaseStyle: bubbletea.NewBaseStyle(),
+		}),
+	}
+	cli := cmd.New(&cmdParams)
+
+	runParams := &cmd.RunParams{
+		ResultCallback: nil,
 	}
 
-	currentImplementation, ok := implementation.ImplementationsMap[cliResult.Choice]
+	runResult, err := cli.Run(runParams)
+	if err != nil {
+		log.Printf("failed to run cli: %v", err)
+	}
+
+	currentImplementation, ok := implementation.ImplementationsMap[runResult.ChoicesModelResult.Choice]
 	if !ok {
-		log.Fatal(fmt.Errorf("expected to find the following implementation: %v", cliResult.Choice))
+		log.Fatal(fmt.Errorf("expected to find the following implementation: %v", runResult.ChoicesModelResult.Choice))
 	}
 
 	app := mainApp.App{}

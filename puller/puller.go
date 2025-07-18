@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 
 	"graphql-go/compatibility-unit-tests/types"
 )
@@ -34,8 +35,9 @@ func (p *Puller) Pull(params *PullerParams) (*PullerResult, error) {
 			}
 		}
 		if _, err := git.PlainClone(name, false, &git.CloneOptions{
-			URL:      r.Repo.URL,
-			Progress: os.Stdout,
+			URL:           r.Repo.URL,
+			ReferenceName: plumbing.ReferenceName(r.Repo.ReferenceName),
+			Progress:      os.Stdout,
 		}); err != nil {
 			if strings.Contains(err.Error(), "repository already exists") {
 				return nil, nil
